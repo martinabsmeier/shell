@@ -5,3 +5,11 @@ It uses metadata and Java Reflection to determine which class methods should be 
 
 ### Project History
 The original project was developed by Anton Grigoryev and the code can be found at https://code.google.com/p/cliche/
+
+### Command to scan project
+```shell
+mvn sonar:sonar \
+-Dsonar.projectKey=shell \
+-Dsonar.host.url=http://localhost:9000 \
+-Dsonar.login=e31443f2e71a5e0a5221a23639d7ca5d3b64fa02
+```
