@@ -18,6 +18,13 @@
         </developer>
     </developers>
 
+    <licenses>
+        <license>
+            <name>Apache License</name>
+            <url>https://www.apache.org/licenses/</url>
+        </license>
+    </licenses>
+
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>11</maven.compiler.source>
