@@ -17,6 +17,9 @@ package de.marabs.common.shell.util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static java.util.Objects.isNull;
 
 /**
  * Procedural class with static public methods for string handling.
@@ -32,11 +35,10 @@ public class Strings {
      * @return all-lowercase or all-uppercase word.
      */
     public static String fixCase(String s) {
-        if (s == null || s.length() == 0) {
+        if (isNull(s) || s.isEmpty()) {
             return s;
         }
-        if (Character.isUpperCase(s.charAt(0))
-            && (s.length() == 1 || Character.isLowerCase(s.charAt(1)))) {
+        if (Character.isUpperCase(s.charAt(0)) && (s.length() == 1 || Character.isLowerCase(s.charAt(1)))) {
             s = s.toLowerCase();
         }
         return s;
@@ -51,16 +53,19 @@ public class Strings {
      * @return joined-string
      */
     public static String joinStrings(List<String> strings, boolean fixCase, char withChar) {
-        if (strings == null || strings.size() == 0) {
+        if (isNull(strings) || strings.isEmpty()) {
             return "";
         }
-        StringBuilder result = null;
+
+        boolean isFirst = true;
+        StringBuilder result = new StringBuilder();
         for (String s : strings) {
             if (fixCase) {
                 s = fixCase(s);
             }
-            if (result == null) {
-                result = new StringBuilder(s);
+            if (isFirst) {
+                result.append(s);
+                isFirst = false;
             } else {
                 result.append(withChar);
                 result.append(s);
@@ -77,7 +82,7 @@ public class Strings {
      * @return List of components
      */
     public static List<String> splitJavaIdentifier(String string) {
-        assert string != null;
+        Objects.requireNonNull(string, "NULL is not permitted as value for 'string' parameter");
         List<String> result = new ArrayList<>();
 
         int startIndex = 0;
