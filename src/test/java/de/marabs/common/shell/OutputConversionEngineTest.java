@@ -15,7 +15,7 @@
  */
 package de.marabs.common.shell;
 
-import de.marabs.common.shell.otput.OutputConversionEngine;
+import de.marabs.common.shell.otput.OutputConversion;
 import de.marabs.common.shell.otput.OutputConverter;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,11 +26,11 @@ public class OutputConversionEngineTest {
 
     @Before
     public void setUp() {
-        converter = new OutputConversionEngine();
+        converter = new OutputConversion();
         converter.addDeclaredConverters(this);
     }
 
-    OutputConversionEngine converter;
+    OutputConversion converter;
 
     public static final OutputConverter[] CLI_OUTPUT_CONVERTERS = {
         toBeFormatted -> {
@@ -51,7 +51,7 @@ public class OutputConversionEngineTest {
 
     /**
      * This method tests the order of applying converters, as other methods of
-     * OutputConversionEngine are rather trivial.
+     * OutputConversion are rather trivial.
      */
     @Test
     public void testConvertOutput() {

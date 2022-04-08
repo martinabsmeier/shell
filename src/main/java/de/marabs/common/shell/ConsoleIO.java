@@ -20,7 +20,7 @@ import de.marabs.common.shell.annotation.Param;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
 import de.marabs.common.shell.otput.Output;
-import de.marabs.common.shell.otput.OutputConversionEngine;
+import de.marabs.common.shell.otput.OutputConversion;
 import de.marabs.common.shell.util.Strings;
 
 import java.io.*;
@@ -129,7 +129,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
         }
     }
 
-    public void output(Object obj, OutputConversionEngine oce) {
+    public void output(Object obj, OutputConversion oce) {
         if (obj == null) {
             return;
         } else {
@@ -149,7 +149,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
         }
     }
 
-    private void output(Object obj, int indent, OutputConversionEngine oce) {
+    private void output(Object obj, int indent, OutputConversion oce) {
         if (obj == null) {
             return;
         }

@@ -21,10 +21,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import static java.util.Objects.isNull;
+
 /**
  * Output conversion engine is responsible for converting objects after they are returned
  * by command but before they are sent to the Output.
- * As with InputConversionEngine, it can automatically retrieve all converters declared inside
+ * As with InputConversion, it can automatically retrieve all converters declared inside
  * an object.
  * <p>
  * All converters are applied to all objects, first-registered--last-applied.
@@ -33,12 +35,12 @@ import java.util.ListIterator;
  *
  * @author Martin Absmeier
  */
-public class OutputConversionEngine {
+public class OutputConversion {
 
-    private List<OutputConverter> outputConverters = new ArrayList<>();
+    private final List<OutputConverter> outputConverters = new ArrayList<>();
 
     public void addConverter(OutputConverter converter) {
-        if (converter == null) {
+        if (isNull(converter)) {
             throw new IllegalArgumentException("Converter == null");
         }
         outputConverters.add(converter);

@@ -15,7 +15,7 @@
  */
 package de.marabs.common.shell;
 
-import de.marabs.common.shell.input.InputConversionEngine;
+import de.marabs.common.shell.input.InputConversion;
 import de.marabs.common.shell.input.InputConverter;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,11 +24,11 @@ import static org.junit.Assert.assertEquals;
 
 public class InputConversionEngineTest {
 
-    private InputConversionEngine converter;
+    private InputConversion converter;
 
     @Before
     public void setUp() {
-        converter = new InputConversionEngine();
+        converter = new InputConversion();
     }
 
 
@@ -60,7 +60,7 @@ public class InputConversionEngineTest {
     public void testConverterRegistration() throws Exception {
         System.out.println("testConverterRegistration");
 
-        InputConversionEngine otherConverter = new InputConversionEngine();
+        InputConversion otherConverter = new InputConversion();
         otherConverter.addConverter(testInputConverter);
         assertEquals(MAGIC_INT, otherConverter.convertInput("10", Integer.class));
         otherConverter.removeConverter(testInputConverter);
@@ -75,7 +75,7 @@ public class InputConversionEngineTest {
     public void testDeclaredConverterRegistration() throws Exception {
         System.out.println("testDeclaredConverterRegistration");
 
-        InputConversionEngine otherConverter = new InputConversionEngine();
+        InputConversion otherConverter = new InputConversion();
         otherConverter.addDeclaredConverters(this);
         assertEquals(MAGIC_INT, otherConverter.convertInput("10", Integer.class));
     }

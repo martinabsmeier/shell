@@ -25,23 +25,22 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Objects.isNull;
+
 /**
- * This thing is responsible for converting strings to objects.
- * Elementary types can be handled by itself, and arbitrary types can be handled
- * by registering InputConverter instances.
- * It also gets all converters declared in a handler object
- * through addDeclaredConverters method.
- * <p>
+ * {@code InputConversion} responsible for converting strings to object.<br>
+ * Elementary types can be handled by itself, and arbitrary types can be handled by registering InputConverter instances.
+ * It also gets all converters declared in a handler object through addDeclaredConverters method.<br>
  * Used by Shell and will also be used by ShellCommand.
  *
  * @author Martin Absmeier
  */
-public class InputConversionEngine {
+public class InputConversion {
 
-    private List<InputConverter> inputConverters = new ArrayList<>();
+    private final List<InputConverter> inputConverters = new ArrayList<>();
 
     public void addConverter(InputConverter converter) {
-        if (converter == null) {
+        if (isNull(converter)) {
             throw new IllegalArgumentException("Converter == null");
         }
         inputConverters.add(converter);

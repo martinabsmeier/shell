@@ -20,9 +20,9 @@ import de.marabs.common.shell.annotation.Param;
 import de.marabs.common.shell.exception.CliException;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
-import de.marabs.common.shell.input.InputConversionEngine;
+import de.marabs.common.shell.input.InputConversion;
 import de.marabs.common.shell.otput.Output;
-import de.marabs.common.shell.otput.OutputConversionEngine;
+import de.marabs.common.shell.otput.OutputConversion;
 import de.marabs.common.shell.util.ArrayHashMultiMap;
 import de.marabs.common.shell.util.MultiMap;
 
@@ -107,25 +107,25 @@ public class Shell {
         return commandTable;
     }
 
-    private OutputConversionEngine outputConverter = new OutputConversionEngine();
+    private OutputConversion outputConverter = new OutputConversion();
 
     /**
-     * Call this method to get OutputConversionEngine used by the Shell.
+     * Call this method to get OutputConversion used by the Shell.
      *
      * @return a conversion engine.
      */
-    public OutputConversionEngine getOutputConverter() {
+    public OutputConversion getOutputConverter() {
         return outputConverter;
     }
 
-    private InputConversionEngine inputConverter = new InputConversionEngine();
+    private InputConversion inputConverter = new InputConversion();
 
     /**
-     * Call this method to get InputConversionEngine used by the Shell.
+     * Call this method to get InputConversion used by the Shell.
      *
      * @return a conversion engine.
      */
-    public InputConversionEngine getInputConverter() {
+    public InputConversion getInputConverter() {
         return inputConverter;
     }
 

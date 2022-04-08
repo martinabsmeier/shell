@@ -25,7 +25,7 @@ import de.marabs.common.shell.exception.TokenException;
  */
 public interface Output {
 
-    void output(Object obj, OutputConversionEngine oce);
+    void output(Object obj, OutputConversion oce);
 
     void outputException(String input, TokenException error);
 
