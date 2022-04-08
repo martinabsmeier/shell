@@ -22,8 +22,10 @@ import java.util.Set;
 
 public class EmptyMultiMap<K, V> implements MultiMap<K, V> {
 
+    public static final String YOU_CAN_NOT_MODIFY_EMPTY_MULTI_MAP = "You can not modify EmptyMultiMap: it's always empty!";
+
     public void put(K key, V value) {
-        throw new UnsupportedOperationException("You can't modify EmptyMultyMap: it's always empty!");
+        throw new UnsupportedOperationException(YOU_CAN_NOT_MODIFY_EMPTY_MULTI_MAP);
     }
 
     public Collection<V> get(K key) {
@@ -35,11 +37,11 @@ public class EmptyMultiMap<K, V> implements MultiMap<K, V> {
     }
 
     public void remove(K key, V value) {
-        throw new UnsupportedOperationException("You can't modify EmptyMultyMap: it's always empty!");
+        throw new UnsupportedOperationException(YOU_CAN_NOT_MODIFY_EMPTY_MULTI_MAP);
     }
 
     public void removeAll(K key) {
-        throw new UnsupportedOperationException("You can't modify EmptyMultyMap: it's always empty!");
+        throw new UnsupportedOperationException(YOU_CAN_NOT_MODIFY_EMPTY_MULTI_MAP);
     }
 
     public int size() {
@@ -47,7 +49,7 @@ public class EmptyMultiMap<K, V> implements MultiMap<K, V> {
     }
 
     public void putAll(MultiMap<K, V> map) {
-        throw new UnsupportedOperationException("You can't modify EmptyMultyMap: it's always empty!");
+        throw new UnsupportedOperationException(YOU_CAN_NOT_MODIFY_EMPTY_MULTI_MAP);
     }
 
     @Override
