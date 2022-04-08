@@ -15,19 +15,16 @@
  */
 package de.marabs.common.shell.util;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+
+import static java.util.Objects.nonNull;
 
 public final class ArrayHashMultiMap<K, V> implements MultiMap<K, V> {
 
-    private Map<K, List<V>> listMap;
+    private final Map<K, List<V>> listMap;
 
     public ArrayHashMultiMap() {
-        listMap = new HashMap<K, List<V>>();
+        listMap = new HashMap<>();
     }
 
     public ArrayHashMultiMap(MultiMap<K, V> map) {
@@ -36,20 +33,12 @@ public final class ArrayHashMultiMap<K, V> implements MultiMap<K, V> {
     }
 
     public void put(K key, V value) {
-        List<V> values = listMap.get(key);
-        if (values == null) {
-            values = new ArrayList<V>();
-            listMap.put(key, values);
-        }
+        List<V> values = listMap.computeIfAbsent(key, k -> new ArrayList<>());
         values.add(value);
     }
 
     public Collection<V> get(K key) {
-        List<V> result = listMap.get(key);
-        if (result == null) {
-            result = new ArrayList<V>();
-        }
-        return result;
+        return listMap.computeIfAbsent(key, k -> new ArrayList<>());
     }
 
     public Set<K> keySet() {
@@ -58,7 +47,7 @@ public final class ArrayHashMultiMap<K, V> implements MultiMap<K, V> {
 
     public void remove(K key, V value) {
         List<V> values = listMap.get(key);
-        if (values != null) {
+        if (nonNull(values)) {
             values.remove(value);
             if (values.isEmpty()) {
                 listMap.remove(key);
