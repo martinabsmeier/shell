@@ -25,8 +25,9 @@ import de.marabs.common.shell.Token;
  * @author Martin Absmeier
  */
 public class TokenException extends CliException {
+    private static final long serialVersionUID = -4572281644389173784L;
 
-    private Token token;
+    private final Token token;
 
     public Token getToken() {
         return token;
