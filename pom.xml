@@ -37,7 +37,7 @@
 
         <!-- test dependency versions -->
         <junit.version>4.13.2</junit.version>
-        <mockito.version>4.4.0</mockito.version>
+        <mockito.version>4.5.1</mockito.version>
 
         <!-- plugin versions -->
         <compiler.plugin.version>3.10.1</compiler.plugin.version>
