@@ -21,6 +21,11 @@ import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ * JUnit test cases of class {@link Strings}.
+ *
+ * @author Martin Absmeier
+ */
 public class StringsTest {
 
     /**
@@ -28,13 +33,13 @@ public class StringsTest {
      */
     @Test
     public void testFixCase() {
-        System.out.println("fixCase");
-
         String[] cases = {"", "a", "A", "Abc", "ABC", "ABc"};
         String[] results = {"", "a", "a", "abc", "ABC", "ABc"};
 
         for (int i = 0; i < cases.length; i++) {
-            assertEquals(results[i], Strings.fixCase(cases[i]));
+            String expected = results[i];
+            String actual = Strings.fixCase(cases[i]);
+            assertEquals(expected, actual);
         }
     }
 
@@ -43,13 +48,13 @@ public class StringsTest {
      */
     @Test
     public void testJoinStrings() {
-        System.out.println("JoinStrings");
-
         String[] cases = {"a", "a|b|c", ""};
         String[] results = {"a", "a-b-c", ""};
 
         for (int i = 0; i < cases.length; i++) {
-            assertEquals(results[i], Strings.joinStrings(Arrays.asList(results[i].split("\\|")), false, '-'));
+            String expected = results[i];
+            String actual = Strings.joinStrings(Arrays.asList(cases[i].split("\\|")), false, '-');
+            assertEquals(expected, actual);
         }
     }
 
@@ -58,13 +63,13 @@ public class StringsTest {
      */
     @Test
     public void testSplitJavaIdentifier() {
-        System.out.println("splitJavaIdentifier");
-
         String[] cases = {"", "void", "splitJavaIdentifier", "NUnit", "feedURL", "ConvertURLClass"};
         String[] dashJoined = {"", "void", "split-java-identifier", "n-unit", "feed-URL", "convert-URL-class"};
 
         for (int i = 0; i < cases.length; i++) {
-            assertEquals(dashJoined[i], Strings.joinStrings(Strings.splitJavaIdentifier(cases[i]), true, '-'));
+            String expected = dashJoined[i];
+            String actual = Strings.joinStrings(Strings.splitJavaIdentifier(cases[i]), true, '-');
+            assertEquals(expected, actual);
         }
     }
 }

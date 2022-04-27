@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.isNull;
+import static java.lang.Character.isLowerCase;
+import static java.lang.Character.isUpperCase;
 
 /**
  * Procedural class with static public methods for string handling.
@@ -83,31 +85,28 @@ public class Strings {
      */
     public static List<String> splitJavaIdentifier(String string) {
         Objects.requireNonNull(string, "NULL is not permitted as value for 'string' parameter");
-        List<String> result = new ArrayList<>();
 
+        List<String> result = new ArrayList<>();
         int startIndex = 0;
+
         while (startIndex < string.length()) {
-            if (Character.isLowerCase(string.charAt(startIndex))) {
-                int i = startIndex;
-                while (i < string.length() && Character.isLowerCase(string.charAt(i))) {
-                    i++;
-                }
-                result.add(string.substring(startIndex, i));
-                startIndex = i;
-            } else if (Character.isUpperCase(string.charAt(startIndex))) {
+            char charAt = string.charAt(startIndex);
+            if (isLowerCase(charAt)) {
+                startIndex = processLowerCase(startIndex, string, result);
+            } else if (isUpperCase(charAt)) {
                 if (string.length() - startIndex == 1) {
                     result.add(Character.toString(string.charAt(startIndex++)));
-                } else if (Character.isLowerCase(string.charAt(startIndex + 1))) {
+                } else if (isLowerCase(string.charAt(startIndex + 1))) {
                     int i = startIndex + 1;
-                    while (i < string.length() && Character.isLowerCase(string.charAt(i))) {
+                    while (i < string.length() && isLowerCase(string.charAt(i))) {
                         i++;
                     }
                     result.add(string.substring(startIndex, i));
                     startIndex = i;
                 } else { // if there's several uppercase letters in row
                     int i = startIndex + 1;
-                    while (i < string.length() && Character.isUpperCase(string.charAt(i))
-                        && (string.length() - i == 1 || Character.isUpperCase(string.charAt(i + 1)))) {
+                    while (i < string.length() && isUpperCase(string.charAt(i))
+                        && (string.length() - i == 1 || isUpperCase(string.charAt(i + 1)))) {
                         i++;
                     }
                     result.add(string.substring(startIndex, i));
@@ -119,5 +118,15 @@ public class Strings {
         }
 
         return result;
+    }
+
+    // #################################################################################################################
+    private static int processLowerCase(int startIndex, String string, List<String> result) {
+        int i = startIndex;
+        while (i < string.length() && Character.isLowerCase(string.charAt(i))) {
+            i++;
+        }
+        result.add(string.substring(startIndex, i));
+        return i;
     }
 }
