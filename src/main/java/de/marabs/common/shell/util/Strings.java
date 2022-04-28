@@ -80,7 +80,7 @@ public class Strings {
      * Rather clever function. Splits javaCaseIdentifier into parts
      * (java, Case, Identifier).
      *
-     * @param string String to be splitted
+     * @param string String to be split
      * @return List of components
      */
     public static List<String> splitJavaIdentifier(String string) {
@@ -123,7 +123,7 @@ public class Strings {
     // #################################################################################################################
     private static int processLowerCase(int startIndex, String string, List<String> result) {
         int i = startIndex;
-        while (i < string.length() && Character.isLowerCase(string.charAt(i))) {
+        while (i < string.length() && isLowerCase(string.charAt(i))) {
             i++;
         }
         result.add(string.substring(startIndex, i));
