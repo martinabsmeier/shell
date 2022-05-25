@@ -61,8 +61,7 @@ public class InputConversion {
         return convertArgToElementaryType(string, aClass);
     }
 
-    public final Object[] convertToParameters(List<Token> tokens, Class<?>[] paramClasses, boolean isVarArgs) throws TokenException {
-
+    public final Object[] convertToParameters(List<Token> tokens, Class<?>[] paramClasses, boolean isVarArgs) {
         assert isVarArgs || paramClasses.length == tokens.size() - 1;
 
         Object[] parameters = new Object[paramClasses.length];
@@ -71,10 +70,9 @@ public class InputConversion {
                 parameters[i] = convertInput(tokens.get(i + 1).getString(), paramClasses[i]);
             } catch (ShellException ex) {
                 throw new TokenException(tokens.get(i + 1), ex.getMessage());
-            } catch (Exception e) {
-                throw new TokenException(tokens.get(i + 1), e);
             }
         }
+
         int lastIndex = paramClasses.length - 1;
         if (isVarArgs) {
             Class<?> varClass = paramClasses[lastIndex];
@@ -83,33 +81,48 @@ public class InputConversion {
             Object theArray = Array.newInstance(elemClass, tokens.size() - paramClasses.length);
             for (int i = 0; i < Array.getLength(theArray); i++) {
                 try {
-                    Array.set(theArray, i, convertInput(
-                        tokens.get(lastIndex + 1 + i).getString(),
-                        elemClass));
+                    Array.set(theArray, i, convertInput(tokens.get(lastIndex + 1 + i).getString(), elemClass));
                 } catch (ShellException ex) {
                     throw new TokenException(tokens.get(lastIndex + 1 + i), ex.getMessage());
-                } catch (Exception e) {
-                    throw new TokenException(tokens.get(lastIndex + 1 + i), e);
                 }
             }
             parameters[lastIndex] = theArray;
         } else if (lastIndex >= 0) {
             try {
-                parameters[lastIndex] = convertInput(
-                    tokens.get(lastIndex + 1).getString(),
-                    paramClasses[lastIndex]);
+                parameters[lastIndex] = convertInput(tokens.get(lastIndex + 1).getString(), paramClasses[lastIndex]);
             } catch (ShellException ex) {
                 throw new TokenException(tokens.get(lastIndex + 1), ex.getMessage());
-            } catch (Exception e) {
-                throw new TokenException(tokens.get(lastIndex + 1), e);
             }
         }
 
         return parameters;
     }
 
+    public void addDeclaredConverters(Object handler) {
+        Field[] fields = handler.getClass().getFields();
+        for (Field field : fields) {
+            if (isPrefixAndArrayFieldAndConverter(field)) {
+                try {
+                    Object convertersArray = field.get(handler);
+                    for (int i = 0; i < Array.getLength(convertersArray); i++) {
+                        addConverter((InputConverter) Array.get(convertersArray, i));
+                    }
+                } catch (IllegalArgumentException | IllegalAccessException ex) {
+                    throw new ShellException("Error getting converter from field " + field.getName(), ex);
+                }
+            }
+        }
+    }
 
-    private static Object convertArgToElementaryType(String string, Class<?> aClass) throws ShellException {
+    // #################################################################################################################
+    private boolean isPrefixAndArrayFieldAndConverter(Field field) {
+        final String PREFIX = "CLI_INPUT_CONVERTERS";
+        return field.getName().startsWith(PREFIX)
+            && field.getType().isArray()
+            && InputConverter.class.isAssignableFrom(field.getType().getComponentType());
+    }
+
+    private static Object convertArgToElementaryType(String string, Class<?> aClass) {
         if (aClass.equals(String.class) || aClass.isInstance(string)) {
             return string;
         } else if (aClass.equals(Integer.class) || aClass.equals(Integer.TYPE)) {
@@ -123,35 +136,16 @@ public class InputConversion {
         } else if (aClass.equals(Boolean.class) || aClass.equals(Boolean.TYPE)) {
             return Boolean.parseBoolean(string);
         } else {
-            try {
-                Constructor<?> c = aClass.getConstructor(String.class);
-                try {
-                    return c.newInstance(string);
-                } catch (Exception ex) {
-                    throw new ShellException(String.format("Error instantiating class %c using string %s", aClass, string), ex);
-                }
-            } catch (NoSuchMethodException e) {
-                throw new ShellException("Can't convert string to " + aClass.getName());
-            }
+            return createClass(string, aClass);
         }
     }
 
-    public void addDeclaredConverters(Object handler) {
-        Field[] fields = handler.getClass().getFields();
-        final String PREFIX = "CLI_INPUT_CONVERTERS";
-        for (Field field : fields) {
-            if (field.getName().startsWith(PREFIX)
-                && field.getType().isArray()
-                && InputConverter.class.isAssignableFrom(field.getType().getComponentType())) {
-                try {
-                    Object convertersArray = field.get(handler);
-                    for (int i = 0; i < Array.getLength(convertersArray); i++) {
-                        addConverter((InputConverter) Array.get(convertersArray, i));
-                    }
-                } catch (Exception ex) {
-                    throw new ShellException("Error getting converter from field " + field.getName(), ex);
-                }
-            }
+    private static Object createClass(String string, Class<?> aClass) {
+        try {
+            Constructor<?> constructor = aClass.getConstructor(String.class);
+            return constructor.newInstance(string);
+        } catch (Exception ex) {
+            throw new ShellException("Can not instantiate class: " + aClass.getName(), ex);
         }
     }
 }
