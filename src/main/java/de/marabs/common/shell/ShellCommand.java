@@ -61,7 +61,7 @@ public class ShellCommand {
         StringBuilder result = new StringBuilder();
         result.append(method.getName());
         result.append('(');
-        Class[] paramTypes = method.getParameterTypes();
+        Class<?>[] paramTypes = method.getParameterTypes();
         assert paramTypes.length == paramSpecs.length;
         boolean first = true;
         for (int i = 0; i < paramTypes.length; i++) {

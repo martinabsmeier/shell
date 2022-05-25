@@ -21,6 +21,7 @@ package de.marabs.common.shell;
  *
  * @author Martin Absmeier
  */
+@FunctionalInterface
 public interface ShellDependent {
 
     /**

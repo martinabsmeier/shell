@@ -16,16 +16,13 @@
 package de.marabs.common.shell;
 
 /**
- * This interface is for classes that want to be aware of entering
- * and leaving each command loop.
+ * This interface is for classes that want to be aware of entering and leaving each command loop.
  * <p>
- * You might want some special resources to be allocated before CLI
- * starts; after conversation you want to free those resources.
- * By implementing this interface you get the ability to handle these
- * events.
+ * You might want some special resources to be allocated before CLI starts; after conversation you want to free those
+ * resources. By implementing this interface you get the ability to handle these events.
  * <p>
- * Note that since Shell can possibly have other means of operation
- * instead of commandLoop(), these methods may be not called.
+ * Note that since Shell can possibly have other means of operation instead of commandLoop(), these methods may be not
+ * called.
  *
  * @author Martin Absmeier
  */

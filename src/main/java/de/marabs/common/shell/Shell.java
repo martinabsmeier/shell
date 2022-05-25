@@ -41,7 +41,7 @@ import java.util.List;
  */
 public class Shell {
 
-    public static String PROJECT_HOMEPAGE_URL = "http://cliche.sourceforge.net";
+    public static final String PROJECT_HOMEPAGE_URL = "https://github.com/martinabsmeier/shell";
 
     private Output output;
     private Input input;
@@ -53,7 +53,7 @@ public class Shell {
         private final MultiMap<String, Object> auxHandlers;
         private final boolean displayTime;
 
-        public Settings(Input input, Output output, MultiMap auxHandlers, boolean displayTime) {
+        public Settings(Input input, Output output, MultiMap<String, Object> auxHandlers, boolean displayTime) {
             this.input = input;
             this.output = output;
             this.auxHandlers = auxHandlers;
@@ -61,7 +61,7 @@ public class Shell {
         }
 
         public Settings createWithAddedAuxHandlers(MultiMap<String, Object> addAuxHandlers) {
-            MultiMap<String, Object> allAuxHandlers = new ArrayHashMultiMap<String, Object>(auxHandlers);
+            MultiMap<String, Object> allAuxHandlers = new ArrayHashMultiMap<>(auxHandlers);
             allAuxHandlers.putAll(addAuxHandlers);
             return new Settings(input, output, allAuxHandlers, displayTime);
         }
@@ -72,12 +72,12 @@ public class Shell {
         return new Settings(input, output, auxHandlers, displayTime);
     }
 
-    public void setSettings(Settings s) {
-        input = s.input;
-        output = s.output;
-        displayTime = s.displayTime;
-        for (String prefix : s.auxHandlers.keySet()) {
-            for (Object handler : s.auxHandlers.get(prefix)) {
+    public void setSettings(Settings settings) {
+        input = settings.input;
+        output = settings.output;
+        displayTime = settings.displayTime;
+        for (String prefix : settings.auxHandlers.keySet()) {
+            for (Object handler : settings.auxHandlers.get(prefix)) {
                 addAuxHandler(handler, prefix);
             }
         }
@@ -284,7 +284,7 @@ public class Shell {
             output.output(String.format(HINT_FORMAT, appName), outputConverter);
         } else {
             List<Token> tokens = Token.tokenize(line);
-            if (tokens.size() > 0) {
+            if (!tokens.isEmpty()) {
                 String discriminator = tokens.get(0).getString();
                 processCommand(discriminator, tokens);
             }
@@ -297,7 +297,7 @@ public class Shell {
 
         ShellCommand commandToInvoke = commandTable.lookupCommand(discriminator, tokens);
 
-        Class[] paramClasses = commandToInvoke.getMethod().getParameterTypes();
+        Class<?>[] paramClasses = commandToInvoke.getMethod().getParameterTypes();
         Object[] parameters = inputConverter.convertToParameters(tokens, paramClasses,
             commandToInvoke.getMethod().isVarArgs());
 

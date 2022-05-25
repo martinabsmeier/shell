@@ -73,7 +73,6 @@ public class ShellCommandParamSpec {
     }
 
     public ShellCommandParamSpec(String name, Class<?> valueClass, String description, int position) {
-        super();
         this.name = name;
         this.description = description;
         this.position = position;

@@ -22,11 +22,7 @@ import de.marabs.common.shell.util.MultiMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ShellFactory {
-
-    private ShellFactory() {
-        // this class has only static methods.
-    }
+public final class ShellFactory {
 
     /**
      * One of facade methods for operating the Shell.
@@ -154,5 +150,10 @@ public class ShellFactory {
      */
     public static Shell createSubshell(String pathElement, Shell parent, String appName, Object mainHandler) {
         return createSubshell(pathElement, parent, appName, mainHandler, new EmptyMultiMap<>());
+    }
+
+    // #################################################################################################################
+    private ShellFactory() {
+        // this class has only static methods.
     }
 }
