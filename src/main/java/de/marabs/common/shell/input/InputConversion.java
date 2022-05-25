@@ -16,7 +16,7 @@
 package de.marabs.common.shell.input;
 
 import de.marabs.common.shell.Token;
-import de.marabs.common.shell.exception.CliException;
+import de.marabs.common.shell.exception.ShellException;
 import de.marabs.common.shell.exception.TokenException;
 
 import java.lang.reflect.Array;
@@ -24,8 +24,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Objects.isNull;
+import java.util.Objects;
 
 /**
  * {@code InputConversion} responsible for converting strings to object.<br>
@@ -40,9 +39,7 @@ public class InputConversion {
     private final List<InputConverter> inputConverters = new ArrayList<>();
 
     public void addConverter(InputConverter converter) {
-        if (isNull(converter)) {
-            throw new IllegalArgumentException("Converter == null");
-        }
+        Objects.requireNonNull(converter, "Converter == null");
         inputConverters.add(converter);
     }
 
@@ -50,13 +47,13 @@ public class InputConversion {
         return inputConverters.remove(converter);
     }
 
-    public Object convertInput(String string, Class aClass) throws Exception {
+    public Object convertInput(String string, Class<?> aClass) throws Exception {
         for (InputConverter currentConverter : inputConverters) {
             Object conversionResult = currentConverter.convertInput(string, aClass);
             if (conversionResult != null) {
                 if (!aClass.isAssignableFrom(conversionResult.getClass())) {
-                    throw new CliException("Registered asg.Cliche converter " +
-                        currentConverter + " returns wrong result");
+                    throw new ShellException("Registered asg.Cliche converter " +
+                                                 currentConverter + " returns wrong result");
                 } else {
                     return conversionResult;
                 }
@@ -65,7 +62,7 @@ public class InputConversion {
         return convertArgToElementaryType(string, aClass);
     }
 
-    public final Object[] convertToParameters(List<Token> tokens, Class[] paramClasses, boolean isVarArgs)
+    public final Object[] convertToParameters(List<Token> tokens, Class<?>[] paramClasses, boolean isVarArgs)
         throws TokenException {
 
         assert isVarArgs || paramClasses.length == tokens.size() - 1;
@@ -74,7 +71,7 @@ public class InputConversion {
         for (int i = 0; i < parameters.length - 1; i++) {
             try {
                 parameters[i] = convertInput(tokens.get(i + 1).getString(), paramClasses[i]);
-            } catch (CliException ex) {
+            } catch (ShellException ex) {
                 throw new TokenException(tokens.get(i + 1), ex.getMessage());
             } catch (Exception e) {
                 throw new TokenException(tokens.get(i + 1), e);
@@ -82,16 +79,16 @@ public class InputConversion {
         }
         int lastIndex = paramClasses.length - 1;
         if (isVarArgs) {
-            Class varClass = paramClasses[lastIndex];
+            Class<?> varClass = paramClasses[lastIndex];
             assert varClass.isArray();
-            Class elemClass = varClass.getComponentType();
+            Class<?> elemClass = varClass.getComponentType();
             Object theArray = Array.newInstance(elemClass, tokens.size() - paramClasses.length);
             for (int i = 0; i < Array.getLength(theArray); i++) {
                 try {
                     Array.set(theArray, i, convertInput(
                         tokens.get(lastIndex + 1 + i).getString(),
                         elemClass));
-                } catch (CliException ex) {
+                } catch (ShellException ex) {
                     throw new TokenException(tokens.get(lastIndex + 1 + i), ex.getMessage());
                 } catch (Exception e) {
                     throw new TokenException(tokens.get(lastIndex + 1 + i), e);
@@ -103,7 +100,7 @@ public class InputConversion {
                 parameters[lastIndex] = convertInput(
                     tokens.get(lastIndex + 1).getString(),
                     paramClasses[lastIndex]);
-            } catch (CliException ex) {
+            } catch (ShellException ex) {
                 throw new TokenException(tokens.get(lastIndex + 1), ex.getMessage());
             } catch (Exception e) {
                 throw new TokenException(tokens.get(lastIndex + 1), e);
@@ -114,7 +111,7 @@ public class InputConversion {
     }
 
 
-    private static Object convertArgToElementaryType(String string, Class aClass) throws CliException {
+    private static Object convertArgToElementaryType(String string, Class<?> aClass) throws ShellException {
         if (aClass.equals(String.class) || aClass.isInstance(string)) {
             return string;
         } else if (aClass.equals(Integer.class) || aClass.equals(Integer.TYPE)) {
@@ -129,15 +126,14 @@ public class InputConversion {
             return Boolean.parseBoolean(string);
         } else {
             try {
-                Constructor c = aClass.getConstructor(String.class);
+                Constructor<?> c = aClass.getConstructor(String.class);
                 try {
                     return c.newInstance(string);
                 } catch (Exception ex) {
-                    throw new CliException(String.format(
-                        "Error instantiating class %c using string %s", aClass, string), ex);
+                    throw new ShellException(String.format("Error instantiating class %c using string %s", aClass, string), ex);
                 }
             } catch (NoSuchMethodException e) {
-                throw new CliException("Can't convert string to " + aClass.getName());
+                throw new ShellException("Can't convert string to " + aClass.getName());
             }
         }
     }
@@ -155,7 +151,7 @@ public class InputConversion {
                         addConverter((InputConverter) Array.get(convertersArray, i));
                     }
                 } catch (Exception ex) {
-                    throw new RuntimeException("Error getting converter from field " + field.getName(), ex);
+                    throw new ShellException("Error getting converter from field " + field.getName(), ex);
                 }
             }
         }

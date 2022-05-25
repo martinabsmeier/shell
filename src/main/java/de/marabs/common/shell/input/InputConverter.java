@@ -23,6 +23,7 @@ import de.marabs.common.shell.Shell;
  *
  * @author Martin Absmeier
  */
+@FunctionalInterface
 public interface InputConverter {
 
     /**
@@ -35,5 +36,5 @@ public interface InputConverter {
      * @return Object of the class toClass or <strong>null</strong>, if don't know how to convert to given class
      * @see Shell
      */
-    Object convertInput(String original, Class toClass) throws Exception;
+    Object convertInput(String original, Class<?> toClass) throws Exception;
 }
