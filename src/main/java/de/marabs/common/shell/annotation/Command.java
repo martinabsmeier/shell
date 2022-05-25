@@ -37,8 +37,8 @@ public @interface Command {
     String name() default "";
 
     /**
-     * Specify the description of the command. Default description (if this
-     * property is not set) says "methodName(Arg1Type, Arg2Type,...) : ReturnType".
+     * Specify the description of the command. Default description (if this property is not set) says
+     * "methodName(Arg1Type, Arg2Type,...) : ReturnType".
      *
      * @return command's description or "" if not set.
      */

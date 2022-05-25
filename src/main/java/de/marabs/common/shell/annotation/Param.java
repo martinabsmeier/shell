@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 
 /**
  * Annotation for parameters of Command-marked methods.
- * This annotation is of particular usefullness, because Java 5 Reflection doesn't have access
+ * This annotation is of particular usefulness, because Java 5 Reflection doesn't have access
  * to declared parameter names (there's simply no such information stored in classfile).
  * You must at least provide name attribute, others being optional.
  *
