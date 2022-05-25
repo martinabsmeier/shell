@@ -61,8 +61,8 @@ public final class ArrayHashMultiMap<K, V> implements MultiMap<K, V> {
 
     public int size() {
         int sum = 0;
-        for (K key : listMap.keySet()) {
-            sum += listMap.get(key).size();
+        for (Map.Entry<K, List<V>> entry : listMap.entrySet()) {
+            sum += listMap.get(entry.getKey()).size();
         }
         return sum;
     }
@@ -79,5 +79,4 @@ public final class ArrayHashMultiMap<K, V> implements MultiMap<K, V> {
     public String toString() {
         return listMap.toString();
     }
-
 }

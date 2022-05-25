@@ -16,6 +16,7 @@
 package de.marabs.common.shell.input;
 
 import de.marabs.common.shell.Shell;
+import de.marabs.common.shell.exception.ShellException;
 
 /**
  * This interface is used by the Shell to support new argument types.
@@ -36,5 +37,5 @@ public interface InputConverter {
      * @return Object of the class toClass or <strong>null</strong>, if don't know how to convert to given class
      * @see Shell
      */
-    Object convertInput(String original, Class<?> toClass) throws Exception;
+    Object convertInput(String original, Class<?> toClass) throws ShellException;
 }

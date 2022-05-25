@@ -28,7 +28,7 @@ import static java.util.Objects.requireNonNull;
  *
  * @author Martin Absmeier
  */
-public class Strings {
+public final class Strings {
 
     /**
      * Fixes case of a word: Str -> str, but URL -> URL.
@@ -128,5 +128,9 @@ public class Strings {
         }
         result.add(string.substring(startIndex, i));
         return i;
+    }
+
+    private Strings() {
+        // Hide the public constructor
     }
 }

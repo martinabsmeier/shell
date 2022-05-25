@@ -15,6 +15,8 @@
  */
 package de.marabs.common.shell.otput;
 
+import de.marabs.common.shell.exception.ShellException;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -75,7 +77,7 @@ public class OutputConversion {
                         addConverter((OutputConverter) Array.get(convertersArray, i));
                     }
                 } catch (Exception ex) {
-                    throw new RuntimeException("Error getting converter from field " + field.getName(), ex);
+                    throw new ShellException("Error getting converter from field " + field.getName(), ex);
                 }
             }
         }
