@@ -24,17 +24,13 @@ import de.marabs.common.shell.Token;
  *
  * @author Martin Absmeier
  */
-public class TokenException extends CliException {
+public class TokenException extends ShellException {
     private static final long serialVersionUID = -4572281644389173784L;
 
     private final Token token;
 
     public Token getToken() {
         return token;
-    }
-
-    public TokenException(Token token) {
-        this.token = token;
     }
 
     public TokenException(Token token, String message) {
@@ -44,11 +40,6 @@ public class TokenException extends CliException {
 
     public TokenException(Token token, Throwable cause) {
         super(cause);
-        this.token = token;
-    }
-
-    public TokenException(Token token, String message, Throwable cause) {
-        super(message, cause);
         this.token = token;
     }
 }
