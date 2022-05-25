@@ -47,13 +47,12 @@ public class InputConversion {
         return inputConverters.remove(converter);
     }
 
-    public Object convertInput(String string, Class<?> aClass) throws Exception {
+    public Object convertInput(String string, Class<?> aClass) {
         for (InputConverter currentConverter : inputConverters) {
             Object conversionResult = currentConverter.convertInput(string, aClass);
             if (conversionResult != null) {
                 if (!aClass.isAssignableFrom(conversionResult.getClass())) {
-                    throw new ShellException("Registered asg.Cliche converter " +
-                                                 currentConverter + " returns wrong result");
+                    throw new ShellException("Registered asg.Cliche converter " + currentConverter + " returns wrong result");
                 } else {
                     return conversionResult;
                 }
@@ -62,8 +61,7 @@ public class InputConversion {
         return convertArgToElementaryType(string, aClass);
     }
 
-    public final Object[] convertToParameters(List<Token> tokens, Class<?>[] paramClasses, boolean isVarArgs)
-        throws TokenException {
+    public final Object[] convertToParameters(List<Token> tokens, Class<?>[] paramClasses, boolean isVarArgs) throws TokenException {
 
         assert isVarArgs || paramClasses.length == tokens.size() - 1;
 

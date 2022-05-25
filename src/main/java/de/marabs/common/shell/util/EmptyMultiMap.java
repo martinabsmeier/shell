@@ -29,11 +29,11 @@ public class EmptyMultiMap<K, V> implements MultiMap<K, V> {
     }
 
     public Collection<V> get(K key) {
-        return new ArrayList<V>();
+        return new ArrayList<>();
     }
 
     public Set<K> keySet() {
-        return new HashSet<K>();
+        return new HashSet<>();
     }
 
     public void remove(K key, V value) {

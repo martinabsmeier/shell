@@ -22,6 +22,7 @@ package de.marabs.common.shell.otput;
  * @author Martin Absmeier
  */
 public interface OutputConverter {
+
     /**
      * Object-to--user-friendly-object (usually string) conversion method.
      * The method must check argument's class, since it will be fed virtually all
