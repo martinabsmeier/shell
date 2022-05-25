@@ -17,11 +17,11 @@ package de.marabs.common.shell.util;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import static java.util.Objects.isNull;
 import static java.lang.Character.isLowerCase;
 import static java.lang.Character.isUpperCase;
+import static java.util.Objects.isNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * Procedural class with static public methods for string handling.
@@ -40,7 +40,7 @@ public class Strings {
         if (isNull(s) || s.isEmpty()) {
             return s;
         }
-        if (Character.isUpperCase(s.charAt(0)) && (s.length() == 1 || Character.isLowerCase(s.charAt(1)))) {
+        if (isUpperCase(s.charAt(0)) && (s.length() == 1 || isLowerCase(s.charAt(1)))) {
             s = s.toLowerCase();
         }
         return s;
@@ -84,7 +84,7 @@ public class Strings {
      * @return List of components
      */
     public static List<String> splitJavaIdentifier(String string) {
-        Objects.requireNonNull(string, "NULL is not permitted as value for 'string' parameter");
+        requireNonNull(string, "NULL is not permitted as value for 'string' parameter");
 
         List<String> result = new ArrayList<>();
         int startIndex = 0;

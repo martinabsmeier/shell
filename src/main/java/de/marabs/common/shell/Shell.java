@@ -17,7 +17,7 @@ package de.marabs.common.shell;
 
 import de.marabs.common.shell.annotation.Command;
 import de.marabs.common.shell.annotation.Param;
-import de.marabs.common.shell.exception.CliException;
+import de.marabs.common.shell.exception.ShellException;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
 import de.marabs.common.shell.input.InputConversion;
@@ -246,7 +246,7 @@ public class Shell {
             } catch (TokenException te) {
                 lastException = te;
                 output.outputException(command, te);
-            } catch (CliException clie) {
+            } catch (ShellException clie) {
                 lastException = clie;
                 if (!command.trim().equals("exit")) {
                     output.outputException(clie);
@@ -276,10 +276,10 @@ public class Shell {
      * All output is directed to shell's Output.
      *
      * @param line Full command line
-     * @throws CliException This may be TokenException
+     * @throws ShellException This may be TokenException
      * @see Output
      */
-    public void processLine(String line) throws CliException {
+    public void processLine(String line) throws ShellException {
         if (line.trim().equals("?")) {
             output.output(String.format(HINT_FORMAT, appName), outputConverter);
         } else {
@@ -291,7 +291,7 @@ public class Shell {
         }
     }
 
-    private void processCommand(String discriminator, List<Token> tokens) throws CliException {
+    private void processCommand(String discriminator, List<Token> tokens) throws ShellException {
         assert discriminator != null;
         assert !discriminator.equals("");
 

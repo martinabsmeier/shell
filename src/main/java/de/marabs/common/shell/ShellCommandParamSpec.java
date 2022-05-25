@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 public class ShellCommandParamSpec {
 
     static ShellCommandParamSpec[] forMethod(Method theMethod) {
-        Class[] paramTypes = theMethod.getParameterTypes();
+        Class<?>[] paramTypes = theMethod.getParameterTypes();
         ShellCommandParamSpec[] result = new ShellCommandParamSpec[theMethod.getParameterTypes().length];
         Annotation[][] annotations = theMethod.getParameterAnnotations();
         assert annotations.length == result.length;
@@ -41,7 +41,7 @@ public class ShellCommandParamSpec {
                 }
             }
             if (paramAnnotation != null) {
-                assert !paramAnnotation.name().isEmpty() : "@Param.name mustn\'t be empty";
+                assert !paramAnnotation.name().isEmpty() : "@Param.name must not be empty";
                 result[i] = new ShellCommandParamSpec(paramAnnotation.name(), paramTypes[i],
                     paramAnnotation.description(), i);
             } else {
@@ -54,9 +54,9 @@ public class ShellCommandParamSpec {
     private final String name;
     private final String description;
     private final int position;
-    private final Class valueClass;
+    private final Class<?> valueClass;
 
-    public Class getValueClass() {
+    public Class<?> getValueClass() {
         return valueClass;
     }
 
@@ -72,7 +72,7 @@ public class ShellCommandParamSpec {
         return position;
     }
 
-    public ShellCommandParamSpec(String name, Class valueClass, String description, int position) {
+    public ShellCommandParamSpec(String name, Class<?> valueClass, String description, int position) {
         super();
         this.name = name;
         this.description = description;

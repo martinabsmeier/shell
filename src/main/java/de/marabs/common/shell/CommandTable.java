@@ -16,13 +16,12 @@
 package de.marabs.common.shell;
 
 import de.marabs.common.shell.annotation.Command;
-import de.marabs.common.shell.exception.CliException;
+import de.marabs.common.shell.exception.ShellException;
 import lombok.Getter;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static java.util.Objects.requireNonNull;
 
@@ -101,7 +100,7 @@ public class CommandTable {
         return collectedTable;
     }
 
-    public ShellCommand lookupCommand(String discriminator, List<Token> tokens) throws CliException {
+    public ShellCommand lookupCommand(String discriminator, List<Token> tokens) throws ShellException {
         List<ShellCommand> collectedTable = commandsByName(discriminator);
         // reduction
         List<ShellCommand> reducedTable = new ArrayList<>();
@@ -114,11 +113,11 @@ public class CommandTable {
         }
         // selection
         if (collectedTable.isEmpty()) {
-            throw CliException.createCommandNotFound(discriminator);
+            throw ShellException.createCommandNotFound(discriminator);
         } else if (reducedTable.isEmpty()) {
-            throw CliException.createCommandNotFoundForArgNum(discriminator, tokens.size() - 1);
+            throw ShellException.createCommandNotFoundForArgNum(discriminator, tokens.size() - 1);
         } else if (reducedTable.size() > 1) {
-            throw CliException.createAmbiguousCommandExc(discriminator, tokens.size() - 1);
+            throw ShellException.createAmbiguousCommandExc(discriminator, tokens.size() - 1);
         } else {
             return reducedTable.get(0);
         }

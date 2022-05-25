@@ -15,7 +15,7 @@
  */
 package de.marabs.common.shell;
 
-import de.marabs.common.shell.exception.CliException;
+import de.marabs.common.shell.exception.ShellException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -82,14 +82,14 @@ public class ShellCommand {
         return result.toString();
     }
 
-    public Object invoke(Object[] parameters) throws CliException {
+    public Object invoke(Object[] parameters) throws ShellException {
         assert method != null;
         try {
             return method.invoke(handler, parameters);
         } catch (InvocationTargetException ite) {
             return ite.getCause();
         } catch (Exception ex) {
-            throw new CliException(ex);
+            throw new ShellException(ex);
         }
     }
 

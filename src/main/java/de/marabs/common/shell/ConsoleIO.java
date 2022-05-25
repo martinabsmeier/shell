@@ -17,6 +17,7 @@ package de.marabs.common.shell;
 
 import de.marabs.common.shell.annotation.Command;
 import de.marabs.common.shell.annotation.Param;
+import de.marabs.common.shell.exception.ShellException;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
 import de.marabs.common.shell.otput.Output;
@@ -49,8 +50,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
     }
 
     public ConsoleIO() {
-        this(new BufferedReader(new InputStreamReader(System.in)),
-            System.out, System.err);
+        this(new BufferedReader(new InputStreamReader(System.in)), System.out, System.err);
     }
 
     public String readCommand(List<String> path) {
@@ -70,7 +70,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
             }
             return readUsersCommand(prompt);
         } catch (IOException ex) {
-            throw new Error(ex);
+            throw new ShellException(ex);
         }
     }
 
@@ -115,8 +115,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
 
     @Command(description = "Reads commands from file")
     public void runScript(
-        @Param(name = "filename", description = "Full file name of the script")
-            String filename
+        @Param(name = "filename", description = "Full file name of the script") String filename
     ) throws FileNotFoundException {
 
         scriptReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
