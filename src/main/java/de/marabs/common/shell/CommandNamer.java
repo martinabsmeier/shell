@@ -15,6 +15,8 @@
  */
 package de.marabs.common.shell;
 
+import lombok.Data;
+
 import java.lang.reflect.Method;
 import java.util.Arrays;
 
@@ -29,6 +31,7 @@ import java.util.Arrays;
  *
  * @author Martin Absmeier
  */
+@FunctionalInterface
 public interface CommandNamer {
 
     /**
@@ -47,6 +50,7 @@ public interface CommandNamer {
      * algorithm they are generated simultaneously, and I think this approach is
      * better than having a stateful strategy.
      */
+    @Data
     class NamingInfo {
         public final String commandName;
         public final String[] possibleAbbreviations;
@@ -57,37 +61,8 @@ public interface CommandNamer {
         }
 
         @Override
-        public boolean equals(Object obj) {
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final NamingInfo other = (NamingInfo) obj;
-            if ((this.commandName == null) ? (other.commandName != null) : !this.commandName.equals(other.commandName)) {
-                return false;
-            }
-            if (this.possibleAbbreviations != other.possibleAbbreviations &&
-                (this.possibleAbbreviations == null ||
-                    !Arrays.equals(this.possibleAbbreviations, other.possibleAbbreviations))) {
-                return false;
-            }
-            return true;
-        }
-
-        @Override
-        public int hashCode() {
-            int hash = 5;
-            hash = 59 * hash + (this.commandName != null ? this.commandName.hashCode() : 0);
-            hash = 59 * hash + (this.possibleAbbreviations != null ? Arrays.hashCode(this.possibleAbbreviations) : 0);
-            return hash;
-        }
-
-        @Override
         public String toString() {
             return String.format("NamingInfo(%s, %s)", commandName, Arrays.toString(possibleAbbreviations));
         }
     }
-
 }
