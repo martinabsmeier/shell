@@ -21,7 +21,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for commands. Allows to specify the name of a command, otherwise method's name is used.
+ * {@code Command} is used to annotate methods to be recognized as a command.<br />
+ * If the command name is not set, the name of the annotated method is used as the command name.<br />
+ * All attributes are optional
  *
  * @author Martin Absmeier
  */
@@ -30,33 +32,35 @@ import java.lang.annotation.Target;
 public @interface Command {
 
     /**
-     * Allows overriding default command name, which is derived from method's name
+     * Name of the command.<br />
+     * Allows overriding default command name, which is derived from method name.
      *
-     * @return "" or null if default name is used, user-specified name otherwise.
+     * @return "" or NULL if default name is used, user-specified name otherwise
      */
     String name() default "";
 
     /**
-     * Specify the description of the command. Default description (if this property is not set) says
-     * "methodName(Arg1Type, Arg2Type,...) : ReturnType".
+     * Description of the command.<br />
+     * Default description (if this property is not set) says "methodName(Arg1Type, Arg2Type,...) : ReturnType".
      *
-     * @return command's description or "" if not set.
+     * @return description of the command or "" if not set
      */
     String description() default "";
 
     /**
-     * Specify the shortcut name for the command.
-     * If not set, if the name attribute is not set as well, the Shell takes
+     * Shortcut name for the command.<br />
+     * If not set and, the name attribute is not set as well, the Shell takes
      * the first letter of each word (void selectUser() --- select-user --- su).
      *
-     * @return command's abbreviation or "" if not set.
+     * @return shortcut of the command  or "" if not set
      */
-    String abbrev() default "";
+    String shortcut() default "";
 
     /**
-     * Specify the string to output before command's output, i.e. some explanations.
+     * Header of the command.<br />
+     * A string to output before the command output, i.e. some explanations.
      *
-     * @return command's header or "" if not set.
+     * @return header of the command or "" if not set
      */
     String header() default "";
 }

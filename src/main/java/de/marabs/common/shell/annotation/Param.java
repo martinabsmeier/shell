@@ -21,9 +21,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation for parameters of Command-marked methods.
- * This annotation is of particular usefulness, because Java 5 Reflection doesn't have access
- * to declared parameter names (there's simply no such information stored in classfile).
+ * {@code Param} is used to annotate the parameters of {@link Command} marked method.<br />
  * You must at least provide name attribute, others being optional.
  *
  * @author Martin Absmeier
@@ -33,19 +31,20 @@ import java.lang.annotation.Target;
 public @interface Param {
 
     /**
-     * Parameter name.
-     * Should (1) reflect the original Java parameter name, (2) be short and descriptive to the user.
-     * Recommendations: "number-of-nodes", "user-login", "coefficients".
+     * Name of the parameter.<br />
+     * 1. Should reflect the original Java parameter name<br />
+     * 2. Should be short and descriptive to the user<br />
+     * <b>Recommendations:</b> "number-of-nodes", "user-login", "coefficients".
      *
-     * @return The name ascribed to annotated method parameter.
+     * @return the name of the annotated method parameter.
      */
     String name();
 
     /**
-     * One-sentence description of the parameter.
-     * It is recommended that you always set it.
+     * Description of the command.<br />
+     * Default description (if this property is not set) says "methodName(Arg1Type, Arg2Type,...) : ReturnType".
      *
-     * @return "Short description attribute" of the annotated parameter.
+     * @return description of the annotated method parameter or "" if not set
      */
     String description() default "";
 
