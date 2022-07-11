@@ -16,7 +16,7 @@
 package de.marabs.common.shell;
 
 import de.marabs.common.shell.annotation.Command;
-import de.marabs.common.shell.annotation.Param;
+import de.marabs.common.shell.annotation.CommandParameter;
 import de.marabs.common.shell.exception.ShellException;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
@@ -25,12 +25,15 @@ import de.marabs.common.shell.otput.Output;
 import de.marabs.common.shell.otput.OutputConversion;
 import de.marabs.common.shell.util.ArrayHashMultiMap;
 import de.marabs.common.shell.util.MultiMap;
+import lombok.Builder;
+import lombok.Data;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Shell is the class interacting with user.
@@ -39,45 +42,35 @@ import java.util.List;
  *
  * @author Martin Absmeier
  */
+@Data
 public class Shell {
 
     public static final String PROJECT_HOMEPAGE_URL = "https://github.com/martinabsmeier/shell";
+    private static final String HINT_FORMAT = "This is %1$s, running on Shell\nFor more information on the Shell, enter ?help";
+    private static final String TIME_MS_FORMAT_STRING = "time: %d ms";
 
     private Output output;
     private Input input;
     private String appName;
+    private CommandTable commandTable;
+    private InputConversion inputConverter = new InputConversion();
+    private OutputConversion outputConverter = new OutputConversion();
+    private MultiMap<String, Object> auxHandlers = new ArrayHashMultiMap<>();
+    private List<Object> allHandlers = new ArrayList<>();
+    private Throwable lastException = null;
+    private List<String> path;
+    private boolean displayTime = false;
 
-    public static class Settings {
-        private final Input input;
-        private final Output output;
-        private final MultiMap<String, Object> auxHandlers;
-        private final boolean displayTime;
-
-        public Settings(Input input, Output output, MultiMap<String, Object> auxHandlers, boolean displayTime) {
-            this.input = input;
-            this.output = output;
-            this.auxHandlers = auxHandlers;
-            this.displayTime = displayTime;
-        }
-
-        public Settings createWithAddedAuxHandlers(MultiMap<String, Object> addAuxHandlers) {
-            MultiMap<String, Object> allAuxHandlers = new ArrayHashMultiMap<>(auxHandlers);
-            allAuxHandlers.putAll(addAuxHandlers);
-            return new Settings(input, output, allAuxHandlers, displayTime);
-        }
-
+    public ShellConfig getShellConfig() {
+        return ShellConfig.builder().input(input).output(output).auxHandlers(auxHandlers).displayTime(displayTime).build();
     }
 
-    public Settings getSettings() {
-        return new Settings(input, output, auxHandlers, displayTime);
-    }
-
-    public void setSettings(Settings settings) {
-        input = settings.input;
-        output = settings.output;
-        displayTime = settings.displayTime;
-        for (String prefix : settings.auxHandlers.keySet()) {
-            for (Object handler : settings.auxHandlers.get(prefix)) {
+    public void setShellConfig(ShellConfig config) {
+        input = config.getInput();
+        output = config.getOutput();
+        displayTime = config.isDisplayTime();
+        for (String prefix : config.getAuxHandlers().keySet()) {
+            for (Object handler : config.getAuxHandlers().get(prefix)) {
                 addAuxHandler(handler, prefix);
             }
         }
@@ -87,51 +80,17 @@ public class Shell {
      * Shell's constructor
      * You probably don't need this one, see methods of the ShellFactory.
      *
-     * @param s            Settings object for the shell instance
+     * @param config       ShellConfig object for the shell instance
      * @param commandTable CommandTable to store commands
      * @param path         Shell's location: list of path elements.
      * @see ShellFactory
      */
-    public Shell(Settings s, CommandTable commandTable, List<String> path) {
+    @Builder
+    public Shell(ShellConfig config, CommandTable commandTable, List<String> path) {
         this.commandTable = commandTable;
         this.path = path;
-        setSettings(s);
+        setShellConfig(config);
     }
-
-    private CommandTable commandTable;
-
-    /**
-     * @return the CommandTable for this shell.
-     */
-    public CommandTable getCommandTable() {
-        return commandTable;
-    }
-
-    private OutputConversion outputConverter = new OutputConversion();
-
-    /**
-     * Call this method to get OutputConversion used by the Shell.
-     *
-     * @return a conversion engine.
-     */
-    public OutputConversion getOutputConverter() {
-        return outputConverter;
-    }
-
-    private InputConversion inputConverter = new InputConversion();
-
-    /**
-     * Call this method to get InputConversion used by the Shell.
-     *
-     * @return a conversion engine.
-     */
-    public InputConversion getInputConverter() {
-        return inputConverter;
-    }
-
-    private MultiMap<String, Object> auxHandlers = new ArrayHashMultiMap<>();
-    private List<Object> allHandlers = new ArrayList<>();
-
 
     /**
      * Method for registering command hanlers (or providers?)
@@ -147,16 +106,14 @@ public class Shell {
      * @see ShellManageable
      */
     public void addMainHandler(Object handler, String prefix) {
-        if (handler == null) {
-            throw new NullPointerException();
-        }
-        allHandlers.add(handler);
+        Objects.requireNonNull(handler, "NULL is not permitted as value for handler.");
 
+        allHandlers.add(handler);
         addDeclaredMethods(handler, prefix);
         inputConverter.addDeclaredConverters(handler);
         outputConverter.addDeclaredConverters(handler);
 
-        if (handler instanceof ShellDependent) {
+        if (handler.getClass().isAssignableFrom(ShellDependent.class)) {
             ((ShellDependent) handler).cliSetShell(this);
         }
     }
@@ -194,36 +151,6 @@ public class Shell {
         }
     }
 
-    private Throwable lastException = null;
-
-    /**
-     * Returns last thrown exception
-     */
-    @Command(description = "Returns last thrown exception") // Shell is self-manageable, isn't it?
-    public Throwable getLastException() {
-        return lastException;
-    }
-
-    private List<String> path;
-
-    /**
-     * @return list of path elements, as it was passed in constructor
-     */
-    public List<String> getPath() {
-        return path;
-    }
-
-    /**
-     * Function to allow changing path at runtime; use with care to not break
-     * the semantics of sub-shells (if you're using them) or use to emulate
-     * tree navigation without subshells
-     *
-     * @param path New path
-     */
-    public void setPath(List<String> path) {
-        this.path = path;
-    }
-
     /**
      * Runs the command session.
      * Create the Shell, then run this method to listen to the user,
@@ -234,7 +161,7 @@ public class Shell {
     public void commandLoop() throws IOException {
         for (Object handler : allHandlers) {
             if (handler instanceof ShellManageable) {
-                ((ShellManageable) handler).cliEnterLoop();
+                ((ShellManageable) handler).enterLoop();
             }
         }
         output.output(appName, outputConverter);
@@ -255,7 +182,7 @@ public class Shell {
         }
         for (Object handler : allHandlers) {
             if (handler instanceof ShellManageable) {
-                ((ShellManageable) handler).cliLeaveLoop();
+                ((ShellManageable) handler).leaveLoop();
             }
         }
     }
@@ -267,9 +194,6 @@ public class Shell {
             output.outputHeader(String.format(header, parameters));
         }
     }
-
-    private static final String HINT_FORMAT = "This is %1$s, running on Cliche Shell\n" +
-        "For more information on the Shell, enter ?help";
 
     /**
      * You can operate Shell linewise, without entering the command loop.
@@ -299,7 +223,7 @@ public class Shell {
 
         Class<?>[] paramClasses = commandToInvoke.getMethod().getParameterTypes();
         Object[] parameters = inputConverter.convertToParameters(tokens, paramClasses,
-            commandToInvoke.getMethod().isVarArgs());
+                                                                 commandToInvoke.getMethod().isVarArgs());
 
         outputHeader(commandToInvoke.getHeader(), parameters);
 
@@ -318,9 +242,7 @@ public class Shell {
         }
     }
 
-    private static final String TIME_MS_FORMAT_STRING = "time: %d ms";
-
-    private boolean displayTime = false;
+    // #################################################################################################################
 
     /**
      * Turns command execution time display on and off
@@ -329,20 +251,16 @@ public class Shell {
      */
     @Command(description = "Turns command execution time display on and off")
     public void setDisplayTime(
-        @Param(name = "do-display-time", description = "true if do display, false otherwise")
-            boolean displayTime) {
+        @CommandParameter(name = "do-display-time", description = "true if do display, false otherwise")
+        boolean displayTime) {
         this.displayTime = displayTime;
     }
 
     /**
-     * Hint is some text displayed before the command loop and every time user enters "?".
+     * Returns last thrown exception
      */
-    public void setAppName(String appName) {
-        this.appName = appName;
+    @Command(description = "Returns last thrown exception")
+    public Throwable getLastException() {
+        return lastException;
     }
-
-    public String getAppName() {
-        return appName;
-    }
-
 }

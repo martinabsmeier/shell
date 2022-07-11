@@ -21,14 +21,14 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * {@code Param} is used to annotate the parameters of {@link Command} marked method.<br />
+ * {@code CommandParameter} is used to annotate the parameters of {@link Command} marked method.<br />
  * You must at least provide name attribute, others being optional.
  *
  * @author Martin Absmeier
  */
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Param {
+public @interface CommandParameter {
 
     /**
      * Name of the parameter.<br />

@@ -16,7 +16,7 @@
 package de.marabs.common.shell;
 
 import de.marabs.common.shell.annotation.Command;
-import de.marabs.common.shell.annotation.Param;
+import de.marabs.common.shell.annotation.CommandParameter;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -32,7 +32,7 @@ import java.util.List;
  */
 public class HelpCommandHandler implements ShellDependent {
 
-    private static final String COMMAND_LIST_HEADER = "abbrev\tname\tparams";
+    private static final String COMMAND_LIST_HEADER = "shortcut\tname\tparams";
     private Shell owner;
 
     public void cliSetShell(Shell theShell) {
@@ -64,9 +64,9 @@ public class HelpCommandHandler implements ShellDependent {
     @Command(description = "Generates an HTML file with command descriptions.\n" +
         "(Similar to output of ?list, but in HTML format).")
     public String generateHTMLHelp(
-        @Param(name = "file-name", description = "Path to the file to save the table to.")
+        @CommandParameter(name = "file-name", description = "Path to the file to save the table to.")
         String fileName,
-        @Param(name = "include-prefixed", description = "Whether to include commands with prefix " +
+        @CommandParameter(name = "include-prefixed", description = "Whether to include commands with prefix " +
             "(usually system or advanced functionality).")
         boolean includePrefixed) throws IOException {
 
@@ -102,7 +102,7 @@ public class HelpCommandHandler implements ShellDependent {
 
     @Command(description = "List all available commands starting with given string", header = COMMAND_LIST_HEADER)
     public List<String> list(
-        @Param(name = "startsWith", description = "Pattern to show commands starting with") String startsWith) {
+        @CommandParameter(name = "startsWith", description = "Pattern to show commands starting with") String startsWith) {
 
         List<ShellCommand> commands = owner.getCommandTable().getCommandTable();
         List<String> result = new ArrayList<>(commands.size());
@@ -124,7 +124,7 @@ public class HelpCommandHandler implements ShellDependent {
 
     @Command(description = "Show detailed info on all commands with given name")
     public Object help(
-        @Param(name = "command-name", description = "Command name you want help on") String commandName) {
+        @CommandParameter(name = "command-name", description = "Command name you want help on") String commandName) {
         List<ShellCommand> commands = owner.getCommandTable().commandsByName(commandName);
         StringBuilder result = new StringBuilder();
         for (ShellCommand command : commands) {
@@ -137,7 +137,7 @@ public class HelpCommandHandler implements ShellDependent {
     // ################################################################################################################
     private static void appendCommandHTML(StringBuilder commandsHTML, ShellCommand command) {
         final String COMMAND_FORMAT = "<h2>%2$s <small>%3$s</small></h2>\n" +
-            "<p><strong>abbrev:</strong> <big>%1$s</big></p>\n" +
+            "<p><strong>shortcut:</strong> <big>%1$s</big></p>\n" +
             "<p>%4$s</p>\n" +
             "<table>\n" +
             "<tr><th>parameter</th><th>type</th><th>description</th></tr>\n" +
@@ -210,13 +210,13 @@ public class HelpCommandHandler implements ShellDependent {
             formatCommandParamsShort(command),
             command.getDescription()));
         if (command.getArity() > 0) {
-            sb.append(String.format("Number of parameters: %d \n", command.getArity()));
+            sb.append(String.format("Number of parameters: %d %n", command.getArity()));
             Class<?>[] paramTypes = command.getMethod().getParameterTypes();
             ShellCommandParamSpec[] paramSpecs = command.getParamSpecs();
             if (paramSpecs != null) {
                 for (int i = 0; i < paramTypes.length; i++) {
                     if (paramSpecs[i] != null) {
-                        sb.append(String.format("%s\t%s\t%s\n", paramSpecs[i].getName(), paramTypes[i].getSimpleName(),
+                        sb.append(String.format("%s\t%s\t%s%n", paramSpecs[i].getName(), paramTypes[i].getSimpleName(),
                                                 paramSpecs[i].getDescription()));
                     }
                 }

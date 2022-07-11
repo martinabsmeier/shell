@@ -65,8 +65,8 @@ public class CommandTable {
 
         ShellCommand command = new ShellCommand(handler, method, prefix, name);
 
-        if (annotation != null && annotation.abbrev() != null && !annotation.abbrev().equals("")) {
-            command.setAbbreviation(annotation.abbrev());
+        if (annotation != null && annotation.shortcut() != null && !annotation.shortcut().equals("")) {
+            command.setAbbreviation(annotation.shortcut());
         } else {
             command.setAbbreviation(autoAbbrev);
         }

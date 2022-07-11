@@ -33,7 +33,6 @@ public final class ShellFactory {
      * @param appName  The app name string
      * @param handlers Command handlers
      * @return Shell that can be either further customized or run directly by calling commandLoop().
-     * @see Shell#Shell(Shell.Settings, CommandTable, java.util.List)
      */
     public static Shell createConsoleShell(String prompt, String appName, Object... handlers) {
         ConsoleIO io = new ConsoleIO();
@@ -44,8 +43,8 @@ public final class ShellFactory {
         MultiMap<String, Object> modifAuxHandlers = new ArrayHashMultiMap<>();
         modifAuxHandlers.put("!", io);
 
-        Shell theShell = new Shell(new Shell.Settings(io, io, modifAuxHandlers, false),
-            new CommandTable(new DashJoinedNamer(true)), path);
+        ShellConfig config = ShellConfig.builder().input(io).output(io).auxHandlers(modifAuxHandlers).displayTime(false).build();
+        Shell theShell = new Shell(config, new CommandTable(new DashJoinedNamer(true)), path);
         theShell.setAppName(appName);
 
         theShell.addMainHandler(theShell, "!");
@@ -68,7 +67,6 @@ public final class ShellFactory {
      * @param mainHandler Main command handler
      * @param auxHandlers Aux handlers to be passed to all subshells.
      * @return Shell that can be either further customized or run directly by calling commandLoop().
-     * @see Shell#Shell(Shell.Settings, CommandTable, java.util.List)
      */
     public static Shell createConsoleShell(String prompt, String appName, Object mainHandler,
                                            MultiMap<String, Object> auxHandlers) {
@@ -80,8 +78,8 @@ public final class ShellFactory {
         MultiMap<String, Object> modifAuxHandlers = new ArrayHashMultiMap<>(auxHandlers);
         modifAuxHandlers.put("!", io);
 
-        Shell theShell = new Shell(new Shell.Settings(io, io, modifAuxHandlers, false),
-            new CommandTable(new DashJoinedNamer(true)), path);
+        ShellConfig config = ShellConfig.builder().input(io).output(io).auxHandlers(modifAuxHandlers).displayTime(false).build();
+        Shell theShell = new Shell(config, new CommandTable(new DashJoinedNamer(true)), path);
         theShell.setAppName(appName);
 
         theShell.addMainHandler(theShell, "!");
@@ -100,7 +98,6 @@ public final class ShellFactory {
      * @param appName     The app name string
      * @param mainHandler Command handler
      * @return Shell that can be either further customized or run directly by calling commandLoop().
-     * @see Shell#Shell(Shell.Settings, CommandTable, java.util.List)
      */
     public static Shell createConsoleShell(String prompt, String appName, Object mainHandler) {
         return createConsoleShell(prompt, appName, mainHandler, new EmptyMultiMap<>());
@@ -125,7 +122,7 @@ public final class ShellFactory {
         List<String> newPath = new ArrayList<>(parent.getPath());
         newPath.add(pathElement);
 
-        Shell subshell = new Shell(parent.getSettings().createWithAddedAuxHandlers(auxHandlers),
+        Shell subshell = new Shell(parent.getShellConfig().createWithAddedAuxHandlers(auxHandlers),
             new CommandTable(parent.getCommandTable().getNamer()), newPath);
 
         subshell.setAppName(appName);

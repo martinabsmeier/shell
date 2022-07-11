@@ -16,7 +16,7 @@
 package de.marabs.common.shell;
 
 import de.marabs.common.shell.annotation.Command;
-import de.marabs.common.shell.annotation.Param;
+import de.marabs.common.shell.annotation.CommandParameter;
 import de.marabs.common.shell.exception.ShellException;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
@@ -88,7 +88,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
 
     @Command(description = "Reads commands from file")
     public void runScript(
-        @Param(name = "filename", description = "Full file name of the script") String filename) throws FileNotFoundException {
+        @CommandParameter(name = "filename", description = "Full file name of the script") String filename) throws FileNotFoundException {
         scriptReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
         inputState = InputState.SCRIPT;
     }
@@ -138,13 +138,13 @@ public class ConsoleIO implements Input, Output, ShellManageable {
         }
     }
 
-    public void cliEnterLoop() {
+    public void enterLoop() {
         if (isLoggingEnabled()) {
             loopCounter++;
         }
     }
 
-    public void cliLeaveLoop() {
+    public void leaveLoop() {
         if (isLoggingEnabled()) {
             loopCounter--;
         }
@@ -155,7 +155,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
 
     @Command(description = "Sets up logging, which duplicates all subsequent output in a file")
     public void enableLogging(
-        @Param(name = "fileName", description = "Name of the logfile") String filename) throws FileNotFoundException {
+        @CommandParameter(name = "fileName", description = "Name of the logfile") String filename) throws FileNotFoundException {
         log = new PrintStream(filename);
         loopCounter = 0;
     }

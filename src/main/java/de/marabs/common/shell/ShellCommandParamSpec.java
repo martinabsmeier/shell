@@ -15,13 +15,13 @@
  */
 package de.marabs.common.shell;
 
-import de.marabs.common.shell.annotation.Param;
+import de.marabs.common.shell.annotation.CommandParameter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
 /**
- * Specification of command's parameters, such as description given with Param annotation.
+ * Specification of command's parameters, such as description given with CommandParameter annotation.
  *
  * @author Martin Absmeier
  */
@@ -33,15 +33,15 @@ public class ShellCommandParamSpec {
         Annotation[][] annotations = theMethod.getParameterAnnotations();
         assert annotations.length == result.length;
         for (int i = 0; i < result.length; i++) {
-            Param paramAnnotation = null;
+            CommandParameter paramAnnotation = null;
             for (Annotation a : annotations[i]) {
-                if (a instanceof Param) {
-                    paramAnnotation = (Param) a;
+                if (a instanceof CommandParameter) {
+                    paramAnnotation = (CommandParameter) a;
                     break;
                 }
             }
             if (paramAnnotation != null) {
-                assert !paramAnnotation.name().isEmpty() : "@Param.name must not be empty";
+                assert !paramAnnotation.name().isEmpty() : "@CommandParameter.name must not be empty";
                 result[i] = new ShellCommandParamSpec(paramAnnotation.name(), paramTypes[i],
                     paramAnnotation.description(), i);
             } else {

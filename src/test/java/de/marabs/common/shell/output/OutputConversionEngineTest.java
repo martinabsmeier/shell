@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.marabs.common.shell;
+package de.marabs.common.shell.output;
 
 import de.marabs.common.shell.otput.OutputConversion;
 import de.marabs.common.shell.otput.OutputConverter;

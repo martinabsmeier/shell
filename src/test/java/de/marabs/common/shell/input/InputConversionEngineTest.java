@@ -13,10 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package de.marabs.common.shell;
+package de.marabs.common.shell.input;
 
-import de.marabs.common.shell.input.InputConversion;
-import de.marabs.common.shell.input.InputConverter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -43,7 +41,6 @@ public class InputConversionEngineTest {
         for (int i = 0; i < strings.length; i++) {
             assertEquals(results[i], converter.convertInput(strings[i], classes[i]));
         }
-
     }
 
     private static final int MAGIC_INT = 234;

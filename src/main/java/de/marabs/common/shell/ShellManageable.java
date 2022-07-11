@@ -31,10 +31,10 @@ public interface ShellManageable {
     /**
      * This method is called when it is about to enter the command loop.
      */
-    void cliEnterLoop();
+    void enterLoop();
 
     /**
      * This method is called when Shell is leaving the command loop.
      */
-    void cliLeaveLoop();
+    void leaveLoop();
 }

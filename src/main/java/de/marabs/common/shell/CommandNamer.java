@@ -40,7 +40,7 @@ public interface CommandNamer {
      * take parameter types into account.
      *
      * @param commandMethod Command method
-     * @return com.infiniteimprobabilitydrive.analyzer.shell.CommandNamer.NamingInfo containing generated name and abbrev array.
+     * @return com.infiniteimprobabilitydrive.analyzer.shell.CommandNamer.NamingInfo containing generated name and shortcut array.
      */
     NamingInfo nameCommand(Method commandMethod);
 
