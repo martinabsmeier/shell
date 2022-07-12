@@ -43,11 +43,11 @@ public class ShellCommand {
     private String header;
     private final Object handler;
     @Getter
-    private final ShellCommandParamSpec[] paramSpecs;
+    private final ShellCommandParameter[] paramSpecs;
 
     public ShellCommand(Object handler, Method method, String prefix, String name) {
         assert method != null;
-        this.paramSpecs = ShellCommandParamSpec.forMethod(method);
+        this.paramSpecs = ShellCommandParameter.forMethod(method);
         assert paramSpecs.length == method.getParameterTypes().length;
         this.method = method;
         this.prefix = prefix;
@@ -57,7 +57,7 @@ public class ShellCommand {
         this.description = makeCommandDescription(method, paramSpecs);
     }
 
-    private static String makeCommandDescription(Method method, ShellCommandParamSpec[] paramSpecs) {
+    private static String makeCommandDescription(Method method, ShellCommandParameter[] paramSpecs) {
         StringBuilder result = new StringBuilder();
         result.append(method.getName());
         result.append('(');

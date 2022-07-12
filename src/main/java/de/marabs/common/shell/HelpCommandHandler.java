@@ -146,8 +146,8 @@ public class HelpCommandHandler implements ShellDependent {
         final String PARAM_FORMAT = "<tr><td><strong>%1$s</strong></td><td>%2$s</td><td>%3$s</td></tr>\n";
 
         StringBuilder paramsHTML = new StringBuilder();
-        ShellCommandParamSpec[] paramSpecs = command.getParamSpecs();
-        for (ShellCommandParamSpec ps : paramSpecs) {
+        ShellCommandParameter[] paramSpecs = command.getParamSpecs();
+        for (ShellCommandParameter ps : paramSpecs) {
             paramsHTML.append(String.format(PARAM_FORMAT,
                                             htmlEncode(ps.getName()),
                                             htmlEncode(ps.getValueClass().getSimpleName()),
@@ -179,11 +179,11 @@ public class HelpCommandHandler implements ShellDependent {
     }
 
     private static String formatCommandParamsShort(ShellCommand command) {
-        ShellCommandParamSpec[] paramSpecs = command.getParamSpecs();
+        ShellCommandParameter[] paramSpecs = command.getParamSpecs();
         StringBuilder result = new StringBuilder("(");
 
         boolean first = true;
-        for (ShellCommandParamSpec paramSpec : paramSpecs) {
+        for (ShellCommandParameter paramSpec : paramSpecs) {
             if (!first) {
                 result.append(", ");
             }
@@ -212,7 +212,7 @@ public class HelpCommandHandler implements ShellDependent {
         if (command.getArity() > 0) {
             sb.append(String.format("Number of parameters: %d %n", command.getArity()));
             Class<?>[] paramTypes = command.getMethod().getParameterTypes();
-            ShellCommandParamSpec[] paramSpecs = command.getParamSpecs();
+            ShellCommandParameter[] paramSpecs = command.getParamSpecs();
             if (paramSpecs != null) {
                 for (int i = 0; i < paramTypes.length; i++) {
                     if (paramSpecs[i] != null) {

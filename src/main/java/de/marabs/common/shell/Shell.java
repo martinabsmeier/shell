@@ -23,17 +23,12 @@ import de.marabs.common.shell.input.Input;
 import de.marabs.common.shell.input.InputConversion;
 import de.marabs.common.shell.otput.Output;
 import de.marabs.common.shell.otput.OutputConversion;
-import de.marabs.common.shell.util.ArrayHashMultiMap;
-import de.marabs.common.shell.util.MultiMap;
 import lombok.Builder;
 import lombok.Data;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * Shell is the class interacting with user.
@@ -55,7 +50,7 @@ public class Shell {
     private CommandTable commandTable;
     private InputConversion inputConverter = new InputConversion();
     private OutputConversion outputConverter = new OutputConversion();
-    private MultiMap<String, Object> auxHandlers = new ArrayHashMultiMap<>();
+    private Map<String, Object> auxHandlers = new HashMap<>();
     private List<Object> allHandlers = new ArrayList<>();
     private Throwable lastException = null;
     private List<String> path;
@@ -70,9 +65,7 @@ public class Shell {
         output = config.getOutput();
         displayTime = config.isDisplayTime();
         for (String prefix : config.getAuxHandlers().keySet()) {
-            for (Object handler : config.getAuxHandlers().get(prefix)) {
-                addAuxHandler(handler, prefix);
-            }
+            addAuxHandler(config.getAuxHandlers().get(prefix), prefix);
         }
     }
 

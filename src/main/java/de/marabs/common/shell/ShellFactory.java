@@ -15,12 +15,10 @@
  */
 package de.marabs.common.shell;
 
-import de.marabs.common.shell.util.ArrayHashMultiMap;
-import de.marabs.common.shell.util.EmptyMultiMap;
-import de.marabs.common.shell.util.MultiMap;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ShellFactory {
 
@@ -40,7 +38,7 @@ public final class ShellFactory {
         List<String> path = new ArrayList<>(1);
         path.add(prompt);
 
-        MultiMap<String, Object> modifAuxHandlers = new ArrayHashMultiMap<>();
+        Map<String, Object> modifAuxHandlers = new HashMap<>();
         modifAuxHandlers.put("!", io);
 
         ShellConfig config = ShellConfig.builder().input(io).output(io).auxHandlers(modifAuxHandlers).displayTime(false).build();
@@ -69,13 +67,13 @@ public final class ShellFactory {
      * @return Shell that can be either further customized or run directly by calling commandLoop().
      */
     public static Shell createConsoleShell(String prompt, String appName, Object mainHandler,
-                                           MultiMap<String, Object> auxHandlers) {
+                                           Map<String, Object> auxHandlers) {
         ConsoleIO io = new ConsoleIO();
 
         List<String> path = new ArrayList<>(1);
         path.add(prompt);
 
-        MultiMap<String, Object> modifAuxHandlers = new ArrayHashMultiMap<>(auxHandlers);
+        Map<String, Object> modifAuxHandlers = new HashMap<>(auxHandlers);
         modifAuxHandlers.put("!", io);
 
         ShellConfig config = ShellConfig.builder().input(io).output(io).auxHandlers(modifAuxHandlers).displayTime(false).build();
@@ -100,7 +98,7 @@ public final class ShellFactory {
      * @return Shell that can be either further customized or run directly by calling commandLoop().
      */
     public static Shell createConsoleShell(String prompt, String appName, Object mainHandler) {
-        return createConsoleShell(prompt, appName, mainHandler, new EmptyMultiMap<>());
+        return createConsoleShell(prompt, appName, mainHandler, new HashMap<>());
     }
 
     /**
@@ -117,7 +115,7 @@ public final class ShellFactory {
      * @return subshell
      */
     public static Shell createSubshell(String pathElement, Shell parent, String appName, Object mainHandler,
-                                       MultiMap<String, Object> auxHandlers) {
+                                       Map<String, Object> auxHandlers) {
 
         List<String> newPath = new ArrayList<>(parent.getPath());
         newPath.add(pathElement);
@@ -146,7 +144,7 @@ public final class ShellFactory {
      * @return subshell
      */
     public static Shell createSubshell(String pathElement, Shell parent, String appName, Object mainHandler) {
-        return createSubshell(pathElement, parent, appName, mainHandler, new EmptyMultiMap<>());
+        return createSubshell(pathElement, parent, appName, mainHandler, new HashMap<>());
     }
 
     // #################################################################################################################

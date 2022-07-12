@@ -25,11 +25,11 @@ import java.lang.reflect.Method;
  *
  * @author Martin Absmeier
  */
-public class ShellCommandParamSpec {
+public class ShellCommandParameter {
 
-    static ShellCommandParamSpec[] forMethod(Method theMethod) {
+    static ShellCommandParameter[] forMethod(Method theMethod) {
         Class<?>[] paramTypes = theMethod.getParameterTypes();
-        ShellCommandParamSpec[] result = new ShellCommandParamSpec[theMethod.getParameterTypes().length];
+        ShellCommandParameter[] result = new ShellCommandParameter[theMethod.getParameterTypes().length];
         Annotation[][] annotations = theMethod.getParameterAnnotations();
         assert annotations.length == result.length;
         for (int i = 0; i < result.length; i++) {
@@ -42,10 +42,10 @@ public class ShellCommandParamSpec {
             }
             if (paramAnnotation != null) {
                 assert !paramAnnotation.name().isEmpty() : "@CommandParameter.name must not be empty";
-                result[i] = new ShellCommandParamSpec(paramAnnotation.name(), paramTypes[i],
-                    paramAnnotation.description(), i);
+                result[i] = new ShellCommandParameter(paramAnnotation.name(), paramTypes[i],
+                                                      paramAnnotation.description(), i);
             } else {
-                result[i] = new ShellCommandParamSpec(String.format("p%d", i + 1), paramTypes[i], "", i);
+                result[i] = new ShellCommandParameter(String.format("p%d", i + 1), paramTypes[i], "", i);
             }
         }
         return result;
@@ -72,7 +72,7 @@ public class ShellCommandParamSpec {
         return position;
     }
 
-    public ShellCommandParamSpec(String name, Class<?> valueClass, String description, int position) {
+    public ShellCommandParameter(String name, Class<?> valueClass, String description, int position) {
         this.name = name;
         this.description = description;
         this.position = position;
