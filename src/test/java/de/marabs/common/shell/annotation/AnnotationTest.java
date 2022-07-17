@@ -44,7 +44,7 @@ public class AnnotationTest {
                 CommandParameter parameterAnnotation = parameter.getAnnotation(CommandParameter.class);
                 if (Objects.nonNull(parameterAnnotation)) {
                     System.out.println("    --------------------------------------------------------------------------------");
-                    System.out.println("    - Parameter '" + parameter.getName() + "' has param annotation.");
+                    System.out.println("    - Parameter '" + parameter.toString() + "' has param annotation.");
                     System.out.println("        - Name       : " + parameterAnnotation.name());
                     System.out.println("        - Description: " + parameterAnnotation.description());
                 }

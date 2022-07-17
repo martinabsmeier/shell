@@ -21,13 +21,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 
 /**
- * This interface is a Strategy for auto-naming commands with no name specified
- * based on command's method. The algorithm is isolated because it's highly
- * subjective and therefore subject to changes. And, if you don't like
- * default dash-joined naming you can completely redefine the functionality.
- * <p>
- * It is also responsible for generating several suggested abbreviations,
- * one from them may later be "approved" by CommandTable.
+ * This interface is a Strategy for auto-naming commands with no name specified based on command's method. The algorithm
+ * is isolated because it's highly subjective and therefore subject of changes. And, if you don't like default dash-joined
+ * naming you can completely redefine the functionality.
+ * It is also responsible for generating several suggested abbreviations, one from them may later be "approved" by CommandTable.
  *
  * @author Martin Absmeier
  */

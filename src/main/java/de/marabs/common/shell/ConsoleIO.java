@@ -20,6 +20,7 @@ import de.marabs.common.shell.annotation.CommandParameter;
 import de.marabs.common.shell.exception.ShellException;
 import de.marabs.common.shell.exception.TokenException;
 import de.marabs.common.shell.input.Input;
+import de.marabs.common.shell.input.InputType;
 import de.marabs.common.shell.otput.Output;
 import de.marabs.common.shell.otput.OutputConversion;
 import de.marabs.common.shell.util.Strings;
@@ -47,12 +48,11 @@ public class ConsoleIO implements Input, Output, ShellManageable {
     private int lastCommandOffset = 0;
     private PrintStream log = null;
     private int loopCounter = 0;
-    private InputState inputState = InputState.USER;
+    private InputType inputState = InputType.USER;
     private BufferedReader scriptReader = null;
 
-    private enum InputState {USER, SCRIPT}
-
     public ConsoleIO(BufferedReader in, PrintStream out, PrintStream err) {
+        Console console = System.console();
         this.in = in;
         this.out = out;
         this.err = err;
@@ -66,11 +66,11 @@ public class ConsoleIO implements Input, Output, ShellManageable {
         try {
             String prompt = Strings.joinStrings(path, false, '/');
 
-            if (InputState.USER.equals(inputState)) {
+            if (InputType.USER.equals(inputState)) {
                 return readUsersCommand(prompt);
             }
 
-            if (InputState.SCRIPT.equals(inputState)) {
+            if (InputType.SCRIPT.equals(inputState)) {
                 String command = readCommandFromScript(prompt);
                 if (command != null) {
                     return command;
@@ -90,7 +90,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
     public void runScript(
         @CommandParameter(name = "filename", description = "Full file name of the script") String filename) throws FileNotFoundException {
         scriptReader = new BufferedReader(new InputStreamReader(new FileInputStream(filename)));
-        inputState = InputState.SCRIPT;
+        inputState = InputType.SCRIPT;
     }
 
     public void outputHeader(String text) {
@@ -200,7 +200,7 @@ public class ConsoleIO implements Input, Output, ShellManageable {
             scriptReader.close();
             scriptReader = null;
         }
-        inputState = InputState.USER;
+        inputState = InputType.USER;
     }
 
     private void print(Object x) {
